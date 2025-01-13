@@ -1,0 +1,16 @@
+<div class="home-container"
+    style="display: grid; grid-template-columns: 1fr 1fr; justify-content: space-between; align-items: center;">
+    <div>
+        <h1>Search for a city</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input type="text" name="city" placeholder="Enter city name">
+            <input type="text" name="country" placeholder="Enter country name">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div>
+        <h1>Recent Searches</h1>
+    </div>
+</div>
