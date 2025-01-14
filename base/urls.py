@@ -6,4 +6,5 @@ urlpatterns = [
     path('foreCast/<str:city>', views.foreCast, name='foreCast'),
     path('savedCities', views.savedCities, name='savedCities'),
     path('delete/<str:city>', views.delete, name='delete'),
+    path('exportWeather/', views.exportWeather, name='exportWeather'),
 ]
