@@ -1,0 +1,6 @@
+<form action="" method="post">
+    {% csrf_token %}
+    <h1>Are you sure you want to delete {{ object.name }}?</h1>
+    <a href="javascript:history.back()">Go Back</a>
+    <button type="submit">Delete</button>
+</form>

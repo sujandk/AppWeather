@@ -1,5 +1,14 @@
 <div class="home-container"
-    style="display: grid; grid-template-columns: 1fr 1fr; justify-content: space-between; align-items: center;">
+    style="display: grid; grid-template-columns: 1fr 1fr 1fr; justify-content: space-between; align-items: center;">
+
+    <div>
+        <h1>Search your saved cities</h1>
+        <form action="{% url 'savedCities' %}" method="post">
+            {% csrf_token %}
+            <input type="text" name="city" placeholder="Enter city name">
+            <button type="submit">Search</button>
+        </form>
+    </div>
     <div>
         <h1>Search for a city</h1>
         <form action="" method="post">
@@ -14,4 +23,6 @@
         <h1>Recent Searches</h1>
         {%include 'base/recentSearch.html' %}
     </div>
+
+
 </div>

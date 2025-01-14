@@ -1,4 +1,6 @@
+<a href="{% url 'home' %}">Go Back To Home Page</a>
 <h1> City : {{city}}</h1>
+<a href="{% url 'delete' city %}">Delete</a>
 
 
 {% for date, data in weather_date.items %}

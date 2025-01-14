@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import City , Date , Time , Weather
 import requests
 from django.utils.timezone import now
@@ -6,7 +6,8 @@ from datetime import date as dt_date
 from datetime import datetime, timezone
 from pytz import timezone
 import math
-
+from django.db.models import Q
+from django.http import HttpResponse
 # Create your views here.
 def home(request):
     if request.method == 'POST':
@@ -62,24 +63,6 @@ def home(request):
                     "feels_like": weather.feels_like,
                     "description": weather.description,
                 })
-               
-                
-            
-        
-        # all_times = dates.time.all()
-        # weather_data = {}
-
-        # for date in dates:
-        #     times_with_weather = date.times.all().prefetch_related('weather')  # `related_name="times"` is used here
-        #     weather_data[date.date] = [{
-        #     "time": time.time.strftime('%H:%M:%S'),
-        #     "temperature": time.weather.temperature,
-        #     "humidity": time.weather.humidity,
-        #     "feels_like": time.weather.feels_like,
-        #     "description": time.weather.description,
-        #      }
-        #     for time in times_with_weather
-        #     ]
         
 
         return render(request, 'base/forecast.html' , {'weather_date': weather_data , 'city': city})
@@ -156,3 +139,37 @@ def foreCast(request , city):
                     "description": weather.description,
                 })
     return render(request, "base/forecast.html" , {'weather_date': weather_data , 'city': cityName})
+
+def savedCities(request):
+    if request.method == 'POST':
+        try:
+            
+            city = City.objects.get(name=request.POST['city'].lower())
+        except City.DoesNotExist:
+            return HttpResponse(f"City '{request.POST['city']}' not found in your saved database.")
+      
+
+        dates = city.date_set.all()
+        weather_data = {}
+        for date in dates:
+            related_times = date.time_set.all()
+            weather_data[date] = []
+            for time in related_times:
+                weather=Weather.objects.get(time=time)
+                weather_data[date].append({
+                "time": time.time.strftime('%H:%M:%S'),
+                "temperature": weather.temperature,
+                "humidity": weather.humidity,
+                "feels_like": weather.feels_like,
+                "description": weather.description,
+                })
+        return render(request, "base/forecast.html" , {'weather_date': weather_data , 'city': city})
+    
+    return redirect('home')
+    
+def delete(request , city):
+    city = City.objects.get(name=city)
+    if request.method == 'POST':
+        city.delete()
+        return redirect('home')
+    return render(request, "base/delete.html" , {'object': city})
