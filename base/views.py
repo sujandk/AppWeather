@@ -1,16 +1,22 @@
 from django.shortcuts import render
 from .models import City , Date , Time , Weather
 import requests
+from django.utils.timezone import now
+from datetime import date as dt_date
+from datetime import datetime, timezone
+from pytz import timezone
+import math
 
 # Create your views here.
 def home(request):
-     if request.method == 'POST':
+    if request.method == 'POST':
         city = request.POST['city']
         country = request.POST['country']
         api_key = '40b9e3b48771a8ec521f9fb68e2c918c'
-        url = f'https://api.openweathermap.org/data/2.5/forecast?q={city},{country}&appid={api_key}'
+        url = f'https://api.openweathermap.org/data/2.5/forecast?q={city},{country}&appid={api_key}&units=imperial'
         response = requests.get(url)
         data = response.json()
+        print(data)
         lists = data['list']
         city_instance, created = City.objects.get_or_create(name=city, country=country)
       
@@ -78,10 +84,75 @@ def home(request):
 
         return render(request, 'base/forecast.html' , {'weather_date': weather_data , 'city': city})
      
-     recent_searches = City.objects.all()
-     print(recent_searches)
+    recent_searches = City.objects.all().order_by('-created_at')[:5]
+    current_time = now()
+    print(current_time)
+    current_hour = current_time.hour
+    closestHour =  math.ceil((current_hour/3))*3
+    fetchingHour = f"{closestHour:02}:00:00"
+    print(fetchingHour)
+    current_date = dt_date.today()
+    print(current_date)
+    weather_data = {}
+    for search in recent_searches:
+        city_weather = []
+        dates = search.date_set.filter(date=current_date)
+        print(dates)
+        for date in dates:
 
-     return render(request, "base/home.html")
+            #  timeAtCurrent = date.time_set.filter(time=fetchingHour)
+            timeAtCurrent = date.time_set.filter(time=fetchingHour).first()  # Get the first time match
+        
+            if timeAtCurrent:
+                weather = Weather.objects.filter(time=timeAtCurrent).first()  # Get the first matching weather
+            
+                if weather:
+                # Print the weather data
+                    city_weather.append({
+                        'time': fetchingHour,
+                        'temperature': weather.temperature,
+                        'humidity': weather.humidity,
+                        'feels_like': weather.feels_like,
+                        'description': weather.description
+                    })
+                else:
+                    city_weather.append({
+                        'time': fetchingHour,
+                        'temperature': 'N/A',
+                        'humidity': 'N/A',
+                        'feels_like': 'N/A',
+                        'description': 'N/A'
+                    })
+            else:
+               city_weather.append({
+                    'time': fetchingHour,
+                    'temperature': 'N/A',
+                    'humidity': 'N/A',
+                    'feels_like': 'N/A',
+                    'description': 'N/A'
+                })
+  
+            weather_data[search.name] = city_weather
+            print(weather_data)
+    return render(request, "base/home.html", {'weather_data': weather_data})
 
 
 
+def foreCast(request , city):
+    cityName = City.objects.get(name= city)
+    dates = cityName.date_set.all()
+    weather_data = {}
+    for date in dates:
+        related_times = date.time_set.all()
+        weather_data[date] = []
+        for time in related_times:
+            weather=Weather.objects.get(time=time)
+        
+            weather_data[date].append({
+                    "time": time.time.strftime('%H:%M:%S'),
+                    "temperature": weather.temperature,
+                    "humidity": weather.humidity,
+                    "feels_like": weather.feels_like,
+                    "description": weather.description,
+                })
+    return render(request, "base/forecast.html" , {'weather_date': weather_data , 'city': cityName})

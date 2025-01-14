@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 # Create your models here.
 from django.db import models
@@ -7,6 +8,8 @@ from django.db import models
 class City(models.Model):
     name = models.CharField(max_length=255 , null=False , blank=False)
     country = models.CharField(max_length=255 , null=False , blank=False)
+    created_at = models.DateTimeField( auto_now_add=True)  # Add default for migration
+
     def __str__(self):
         return self.name
 

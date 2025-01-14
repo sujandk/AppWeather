@@ -1,0 +1,27 @@
+{% for city, weather_list in weather_data.items %}
+<a href="{% url 'foreCast' city %}">
+    <h2>{{ city }}</h2>
+</a>
+<table>
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            <th>Feels Like</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for weather in weather_list %}
+        <tr>
+            <td>{{ weather.time }}</td>
+            <td>{{ weather.temperature }} &deg;F</td>
+            <td>{{ weather.humidity }}</td>
+            <td>{{ weather.feels_like }}</td>
+            <td>{{ weather.description }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
