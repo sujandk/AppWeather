@@ -1,22 +1,215 @@
-<a href="{% url 'home' %}">Go Back To Home Page</a>
-<h1> City : {{city}}</h1>
-<a href="{% url 'delete' city %}">Delete</a>
+{% extends 'main.html' %}
 
-
-{% for date, data in weather_date.items %}
-<div class="day-card">
-    <h3>Date :{{date}}</h3>
-
-    <div class="card" style="display: grid; grid-template-columns:repeat(8, 1fr); justify-content: space-between; ">
-        {% for datum in data %}
-        <div>
-            <p>Time: {{ datum.time }}</p>
-            <p>Temperature: {{ datum.temperature }} &deg;F</p>
-            <p>Feels like: {{ datum.feels_like }}</p>
-            <p>Humidity: {{ datum.humidity }}%</p>
-            <p>Description: {{ datum.description }}</p>
-        </div>{% endfor %}
+{% block content %}
+<div class="forecast-container">
+    <div class="header-section">
+        <div class="city-info">
+            <h1><i class="fas fa-map-marker-alt"></i> {{ city|title }}</h1>
+            <div class="actions">
+                <a href="{% url 'home' %}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+                <a href="{% url 'delete' city %}" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </div>
+        </div>
     </div>
 
+    <div class="forecast-content">
+        {% for date, forecasts in weather_date.items %}
+        <div class="date-section">
+            <div class="date-header">
+                <h2>{{ date.date|date:"l, F d, Y" }}</h2>
+            </div>
+            <div class="forecasts-grid">
+                {% for forecast in forecasts %}
+                <div class="forecast-card">
+                    <div class="time">{{ forecast.time }}</div>
+                    <div class="weather-icon">
+                        {% if 'clear' in forecast.description %}
+                        <i class="fas fa-sun"></i>
+                        {% elif 'cloud' in forecast.description %}
+                        <i class="fas fa-cloud"></i>
+                        {% elif 'rain' in forecast.description %}
+                        <i class="fas fa-cloud-rain"></i>
+                        {% elif 'snow' in forecast.description %}
+                        <i class="fas fa-snowflake"></i>
+                        {% else %}
+                        <i class="fas fa-cloud-sun"></i>
+                        {% endif %}
+                    </div>
+                    <div class="temperature">{{ forecast.temperature }}°F</div>
+                    <div class="details">
+                        <div class="detail-item">
+                            <i class="fas fa-thermometer-half"></i>
+                            Feels like: {{ forecast.feels_like }}°F
+                        </div>
+                        <div class="detail-item">
+                            <i class="fas fa-tint"></i>
+                            Humidity: {{ forecast.humidity }}%
+                        </div>
+                        <div class="detail-item description">
+                            <i class="fas fa-cloud"></i>
+                            {{ forecast.description|title }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 </div>
-{% endfor %}
+
+<style>
+    .forecast-container {
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: calc(100vh - 76px);
+    }
+
+    .header-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .city-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .city-info h1 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+
+    .city-info h1 i {
+        color: #e74c3c;
+        margin-right: 0.5rem;
+    }
+
+    .actions {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .date-section {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .date-header {
+        background: linear-gradient(135deg, #1a2a6c, #b21f1f);
+        color: white;
+        padding: 1rem 2rem;
+    }
+
+    .date-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+    }
+
+    .forecasts-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .forecast-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+    }
+
+    .forecast-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .time {
+        font-size: 1.2rem;
+        color: #2c3e50;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+
+    .weather-icon {
+        font-size: 3rem;
+        color: #f39c12;
+        margin: 1rem 0;
+    }
+
+    .temperature {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 1rem;
+    }
+
+    .details {
+        text-align: left;
+    }
+
+    .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: #7f8c8d;
+    }
+
+    .detail-item i {
+        width: 20px;
+        color: #3498db;
+    }
+
+    .description {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .forecast-container {
+            padding: 1rem;
+        }
+
+        .city-info {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .city-info h1 {
+            font-size: 2rem;
+        }
+
+        .forecasts-grid {
+            grid-template-columns: 1fr;
+            padding: 1rem;
+        }
+
+        .actions {
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,143 @@
+<footer class="footer mt-auto py-3">
+    <div class="container text-center">
+        <div class="btn-group" role="group">
+            <button class="btn btn-outline-info btn-sm me-2" data-bs-toggle="modal" data-bs-target="#pmModal">
+                <i class="fas fa-info-circle"></i> PM Accelerator
+            </button>
+            <button class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#projectModal">
+                <i class="fas fa-code"></i> About Project
+            </button>
+        </div>
+    </div>
+</footer>
+
+<!-- PM Modal -->
+<div class="modal fade" id="pmModal" tabindex="-1" aria-labelledby="pmModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="pmModalLabel">Career Journey</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From entry-level to VP of Product, we support PM professionals through every stage of their careers.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Info Modal -->
+<div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="projectModalLabel">
+                    <i class="fas fa-code"></i> About Weather App
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="project-info">
+                    <h6 class="mb-3">
+                        <i class="fas fa-code"></i> Technologies Used
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fab fa-python"></i> Python/Django</li>
+                        <li><i class="fab fa-html5"></i> HTML5</li>
+                        <li><i class="fab fa-css3-alt"></i> CSS3</li>
+                        <li><i class="fab fa-bootstrap"></i> Bootstrap</li>
+                        <li><i class="fab fa-js"></i> JavaScript</li>
+                    </ul>
+
+                    <h6 class="mb-3 mt-4">
+                        <i class="fas fa-list-check"></i> Features
+                    </h6>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-cloud-sun"></i> Real-time weather data</li>
+                        <li><i class="fas fa-calendar-days"></i> 5-day weather forecast</li>
+                        <li><i class="fas fa-file-export"></i> Data export functionality</li>
+                        <li><i class="fas fa-mobile-screen"></i> Responsive design</li>
+                    </ul>
+
+                    <div class="contact-info mt-4">
+                        <h6 class="mb-3">
+                            <i class="fas fa-envelope"></i> Contact: dhakalsu787@gmail.com
+                        </h6>
+                        <div class="social-links">
+                            <a href="https://github.com/sujandk" target="_blank" class="btn btn-outline-dark btn-sm">
+                                <i class="fab fa-github"></i> GitHub
+                            </a>
+                            <a href="https://www.linkedin.com/in/sujan-dhakal10" target="_blank"
+                                class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .footer {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        position: relative;
+        margin-top: 3rem;
+    }
+
+    .modal-content {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        border-radius: 15px;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        border-radius: 15px 15px 0 0;
+    }
+
+    .project-info i {
+        width: 25px;
+        color: var(--secondary-color);
+    }
+
+    .project-info ul li {
+        margin-bottom: 0.5rem;
+        padding-left: 1.5rem;
+        position: relative;
+    }
+
+    .project-info ul li i {
+        position: absolute;
+        left: 0;
+        top: 4px;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+
+    .social-links a {
+        transition: transform 0.3s ease;
+    }
+
+    .social-links a:hover {
+        transform: translateY(-2px);
+    }
+
+    @media (max-width: 768px) {
+        .footer {
+            padding: 1rem;
+        }
+    }
+</style>

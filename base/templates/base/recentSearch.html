@@ -1,28 +1,207 @@
-{% for city, weather_list in weather_data.items %}
-<a href="{% url 'foreCast' city %}">
-    <h2>{{ city }}</h2>
-
-    <table>
-        <thead>
-            <tr>
-                <th>Time</th>
-                <th>Temperature</th>
-                <th>Humidity</th>
-                <th>Feels Like</th>
-                <th>Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for weather in weather_list %}
-            <tr>
-                <td>{{ weather.time }}</td>
-                <td>{{ weather.temperature }} &deg;F</td>
-                <td>{{ weather.humidity }}</td>
-                <td>{{ weather.feels_like }}</td>
-                <td>{{ weather.description }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <h3><a href="{% url 'delete' city %}">Delete</a></h3>
+<div class="recent-searches-container">
+    {% for city, forecasts in weather_data.items %}
+    <div class="weather-card">
+        <div class="weather-card-header">
+            <h4>{{ city|title }}</h4>
+            <div class="weather-actions">
+                <a href="{% url 'foreCast' city %}" class="action-btn view-btn" title="View Forecast">
+                    <i class="fas fa-chart-line"></i>
+                </a>
+                <a href="{% url 'delete' city %}" class="action-btn delete-btn" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+        </div>
+        {% for forecast in forecasts %}
+        <div class="weather-details">
+            <div class="weather-icon">
+                {% if 'clear' in forecast.description %}
+                <i class="fas fa-sun"></i>
+                {% elif 'cloud' in forecast.description %}
+                <i class="fas fa-cloud"></i>
+                {% elif 'rain' in forecast.description %}
+                <i class="fas fa-cloud-rain"></i>
+                {% elif 'snow' in forecast.description %}
+                <i class="fas fa-snowflake"></i>
+                {% else %}
+                <i class="fas fa-cloud-sun"></i>
+                {% endif %}
+            </div>
+            <div class="weather-info-grid">
+                <div class="info-item">
+                    <i class="far fa-clock"></i>
+                    <span>{{ forecast.time }}</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-temperature-high"></i>
+                    <span>{{ forecast.temperature }}°F</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-tint"></i>
+                    <span>{{ forecast.humidity }}%</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-thermometer-half"></i>
+                    <span>{{ forecast.feels_like }}°F</span>
+                </div>
+                <div class="info-item description">
+                    <i class="fas fa-cloud"></i>
+                    <span>{{ forecast.description|title }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% empty %}
+    <div class="no-searches">
+        <i class="fas fa-search fa-2x"></i>
+        <p>No recent searches yet</p>
+    </div>
     {% endfor %}
+</div>
+
+<style>
+    .recent-searches-container {
+        max-height: 600px;
+        overflow-y: auto;
+        padding-right: 10px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--secondary-color) transparent;
+    }
+
+    .recent-searches-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .recent-searches-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .recent-searches-container::-webkit-scrollbar-thumb {
+        background-color: var(--secondary-color);
+        border-radius: 20px;
+    }
+
+    .weather-card {
+        background: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .weather-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .weather-card-header {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .weather-card-header h4 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+
+    .weather-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .action-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        transition: all 0.3s ease;
+        text-decoration: none;
+    }
+
+    .action-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+        color: white;
+    }
+
+    .view-btn:hover {
+        background: var(--accent-color);
+    }
+
+    .delete-btn:hover {
+        background: #e74c3c;
+    }
+
+    .weather-details {
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(5px);
+    }
+
+    .weather-icon {
+        text-align: center;
+        font-size: 2rem;
+        color: var(--accent-color);
+        margin-bottom: 1rem;
+    }
+
+    .weather-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .info-item i {
+        color: var(--secondary-color);
+        width: 20px;
+    }
+
+    .description {
+        grid-column: 1 / -1;
+    }
+
+    .no-searches {
+        text-align: center;
+        padding: 2rem;
+        color: var(--text-color);
+        background: rgba(255, 255, 255, 0.7);
+        border-radius: 15px;
+        backdrop-filter: blur(5px);
+    }
+
+    .no-searches i {
+        color: var(--secondary-color);
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .weather-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .weather-card-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 0.5rem;
+        }
+    }
+</style>

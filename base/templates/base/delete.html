@@ -1,6 +1,202 @@
-<form action="" method="post">
-    {% csrf_token %}
-    <h1>Are you sure you want to delete {{ object.name }}?</h1>
-    <a href="javascript:history.back()">Go Back</a>
-    <button type="submit">Delete</button>
-</form>
+{% extends 'main.html' %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="delete-card">
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <div class="delete-content">
+            <h2>Delete Confirmation</h2>
+            <p>Are you sure you want to delete weather data for <strong>{{ object.name }}</strong>?</p>
+            <p class="warning-text">This action cannot be undone.</p>
+
+            <form method="POST" class="delete-form">
+                {% csrf_token %}
+                <div class="button-group">
+                    <a href="{% url 'home' %}" class="btn btn-secondary cancel-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                    <button type="submit" class="btn btn-danger delete-btn">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .delete-container {
+        min-height: calc(100vh - 76px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+
+    .delete-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        padding: 3rem;
+        width: 100%;
+        max-width: 500px;
+        text-align: center;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(20px);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .warning-icon {
+        font-size: 4rem;
+        color: #e74c3c;
+        margin-bottom: 1.5rem;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.1);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .delete-content h2 {
+        color: #2c3e50;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        font-weight: 600;
+    }
+
+    .delete-content p {
+        color: #34495e;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .warning-text {
+        color: #e74c3c;
+        font-size: 0.9rem;
+        font-style: italic;
+        margin: 1rem 0 2rem;
+    }
+
+    .delete-form {
+        margin-top: 2rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    .btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.3s ease;
+        border-radius: 30px;
+    }
+
+    .cancel-btn {
+        background-color: #95a5a6;
+        border: none;
+        color: white;
+    }
+
+    .cancel-btn:hover {
+        background-color: #7f8c8d;
+        transform: translateY(-2px);
+    }
+
+    .delete-btn {
+        background-color: #e74c3c;
+        border: none;
+    }
+
+    .delete-btn:hover {
+        background-color: #c0392b;
+        transform: translateY(-2px);
+    }
+
+    .btn i {
+        margin-right: 0.5rem;
+    }
+
+    /* Glass morphism effect */
+    .delete-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        border-radius: 20px;
+        backdrop-filter: blur(10px);
+        z-index: -1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .delete-container {
+            padding: 1rem;
+        }
+
+        .delete-card {
+            padding: 2rem 1.5rem;
+        }
+
+        .button-group {
+            flex-direction: column-reverse;
+        }
+
+        .btn {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .delete-content h2 {
+            font-size: 1.5rem;
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+        }
+    }
+
+    /* Hover effects */
+    .delete-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+
+    /* Focus states for accessibility */
+    .btn:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.5);
+    }
+</style>
+{% endblock %}
